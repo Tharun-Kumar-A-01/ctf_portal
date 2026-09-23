@@ -17,7 +17,7 @@ A self-hosted platform for running Capture The Flag (CTF) competitions — chall
 
 | Layer | Technology |
 |---|---|
-| Frontend | Vue 3 (`<script setup>`), Vite, Pinia, Vue Router, Chart.js, Sass |
+| Frontend | Vue 3, Vite, Pinia, Vue Router, Chart.js, Sass |
 | Backend | Flask, Flask-JWT-Extended, Flask-SQLAlchemy, Flask-Limiter, Flask-Sock (WebSockets) |
 | Database | PostgreSQL |
 | Cache / Rate limiting | Valkey (Redis-compatible) |
@@ -27,20 +27,20 @@ A self-hosted platform for running Capture The Flag (CTF) competitions — chall
 ## Architecture
 
 ```
-┌────────────┐      ┌───────────────────────────────┐
-│   Client   │◄────►│  Nginx (8080/8443, TLS)        │
-└────────────┘      │   ├─ static Vue build           │
-                     │   └─ reverse proxy → Flask/Gunicorn
-                     └───────────────┬─────────────────┘
-                                     │
-                        ┌────────────┴────────────┐
-                        │   Flask API (Gunicorn)   │
-                        └──────┬─────────────┬─────┘
-                               │             │
-                        ┌──────▼─────┐ ┌─────▼──────┐
-                        │ PostgreSQL │ │   Valkey   │
-                        │  (data)    │ │ (cache/RL) │
-                        └────────────┘ └────────────┘
+┌────────────┐      ┌─────────────────────────────────────┐
+│   Client   │<---->│  Nginx (8080/8443, TLS)             │
+└────────────┘      │   ├─ static Vue build               │
+                    │   └─ reverse proxy → Flask/Gunicorn │
+                    └──────────────────┬──────────────────┘
+                                       │
+                    ┌──────────────────┴──────────────────┐
+                    │        Flask API (Gunicorn)         │
+                    └──────┬────────────────────────┬─────┘
+                           │                        │
+                    ┌──────┴──────────┐ ┌───────────┴─────┐
+                    │    PostgreSQL   │ │      Valkey     │
+                    │     (data)      │ │    (cache/RL)   │
+                    └─────────────────┘ └─────────────────┘
 ```
 
 At runtime, the container generates a self-signed TLS cert (if none is mounted) and an RSA keypair used for end-to-end encrypting API payloads, then starts Nginx and a Gunicorn-served Flask app with one worker per CPU core.
