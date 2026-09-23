@@ -1,0 +1,25 @@
+services:
+  db:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-ctf_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-ctf_password}
+      POSTGRES_DB: ${POSTGRES_DB:-ctf_db}
+    env_file:
+      - .env
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - ctf-db-data-dev:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  cache:
+    image: valkey/valkey:7.2-alpine
+    env_file:
+      - .env
+    ports:
+      - "${VALKEY_PORT:-6379}:6379"
+    restart: unless-stopped
+
+volumes:
+  ctf-db-data-dev:

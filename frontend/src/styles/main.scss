@@ -1,0 +1,466 @@
+@use "sass:map";
+
+$themes: (
+	light: (
+		text: #131e01,
+		background: #fbfff5,
+		primary: #7dd100,
+		primary-dark: #5c9900,
+		secondary: #b4db75,
+		secondary-dark: #8cb34d,
+		accent: #20b128,
+		warning: #d97706,
+		warning-dark: #92400e,
+		error: #dc2626,
+		error-dark: #991b1b,
+		border: #d4d4d8,
+		gold: #d4af37,
+		silver: #a8a9ad,
+		bronze: #b08d57,
+	),
+	dark: (
+		text: #f3fee1,
+		background: #101010,
+		primary: #abff2e,
+		primary-dark: #7ac212,
+		secondary: #638a24,
+		secondary-dark: #405e11,
+		accent: #4edf56,
+		warning: #ffb000,
+		warning-dark: #996900,
+		error: #ff3333,
+		error-dark: #990000,
+		border: #333333,
+		gold: #ffd700,
+		silver: #c0c0c0,
+		bronze: #cd7f32,
+	),
+);
+
+// Map theme properties
+@function get-theme-color($theme, $color-name) {
+	@return map.get(map.get($themes, $theme), $color-name);
+}
+
+// Global SCSS for Boxy Terminal Layout
+@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Orbitron:wght@700&display=swap");
+
+:root {
+	--text: #{get-theme-color(dark, text)};
+	--background: #{get-theme-color(dark, background)};
+	--primary: #{get-theme-color(dark, primary)};
+	--primary-dark: #{get-theme-color(dark, primary-dark)};
+	--secondary: #{get-theme-color(dark, secondary)};
+	--secondary-dark: #{get-theme-color(dark, secondary-dark)};
+	--accent: #{get-theme-color(dark, accent)};
+	--warning: #{get-theme-color(dark, warning)};
+	--warning-dark: #{get-theme-color(dark, warning-dark)};
+	--error: #{get-theme-color(dark, error)};
+	--error-dark: #{get-theme-color(dark, error-dark)};
+	--border: #{get-theme-color(dark, border)};
+	--gold: #{get-theme-color(dark, gold)};
+	--silver: #{get-theme-color(dark, silver)};
+	--bronze: #{get-theme-color(dark, bronze)};
+
+	--font-body: "JetBrains Mono", monospace;
+	--font-heading: "Orbitron", sans-serif;
+}
+
+@media (prefers-color-scheme: light) {
+	:root {
+		--text: #{get-theme-color(light, text)};
+		--background: #{get-theme-color(light, background)};
+		--primary: #{get-theme-color(light, primary)};
+		--primary-dark: #{get-theme-color(light, primary-dark)};
+		--secondary: #{get-theme-color(light, secondary)};
+		--secondary-dark: #{get-theme-color(light, secondary-dark)};
+		--accent: #{get-theme-color(light, accent)};
+		--warning: #{get-theme-color(light, warning)};
+		--warning-dark: #{get-theme-color(light, warning-dark)};
+		--error: #{get-theme-color(light, error)};
+		--error-dark: #{get-theme-color(light, error-dark)};
+		--border: #{get-theme-color(light, border)};
+		--gold: #{get-theme-color(light, gold)};
+		--silver: #{get-theme-color(light, silver)};
+		--bronze: #{get-theme-color(light, bronze)};
+	}
+}
+
+* {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+	border-radius: 0 !important; /* STRICT: No rounded corners anywhere */
+	scrollbar-width: thin;
+	scrollbar-color: var(--primary) transparent;
+}
+
+::-webkit-scrollbar {
+	width: 8px;
+	height: 8px;
+	border-radius: 0 !important;
+	position: fixed;
+	z-index: 9999;
+}
+
+::-webkit-scrollbar-track {
+	background: transparent;
+	border-left: 1px solid var(--border);
+	border-radius: 0 !important;
+}
+
+::-webkit-scrollbar-thumb {
+	background: var(--primary);
+	border-radius: 0 !important;
+}
+
+::-webkit-scrollbar-thumb:hover {
+	background: var(--accent);
+}
+
+html, body {
+	overflow-y: overlay;
+	overflow-x: hidden;
+}
+
+body {
+	font-family: var(--font-body);
+	background-color: var(--background);
+	color: var(--text);
+	line-height: 1.5;
+	min-height: 100vh;
+	padding: 20px;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.brand,
+th {
+	font-family: var(--font-heading);
+	font-weight: 700;
+	color: var(--primary);
+	text-transform: uppercase;
+}
+
+a {
+	color: var(--accent);
+	text-decoration: none;
+}
+a:hover {
+	text-decoration: underline;
+}
+
+/* Base Terminal Elements */
+.glass-card,
+.boxy-card {
+	background-color: transparent;
+	border: 1px solid var(--border);
+	padding: 20px;
+	margin-bottom: 20px;
+	/* No background blur or gradients to keep it terminal pure */
+}
+
+button,
+.btn {
+	font-family: var(--font-body);
+	background-color: transparent;
+	color: var(--primary);
+	border: 1px solid var(--primary);
+	padding: 8px 16px;
+	text-transform: uppercase;
+	letter-spacing: 1px;
+	font-weight: 700;
+	cursor: pointer;
+	transition:
+		background-color 0.2s,
+		color 0.2s;
+
+	&:hover {
+		background-color: var(--primary);
+		color: var(--background);
+	}
+
+	&:disabled {
+		border-color: var(--secondary);
+		color: var(--secondary);
+		cursor: not-allowed;
+		background-color: transparent;
+	}
+}
+
+input,
+select,
+textarea {
+	font-family: var(--font-body);
+	background-color: transparent;
+	color: var(--text);
+	border: 1px solid var(--border);
+	padding: 10px;
+	outline: none;
+
+	&:focus {
+		border-color: var(--primary);
+	}
+}
+
+input[type="file"] {
+	padding: 6px;
+
+	&::file-selector-button {
+		font-family: var(--font-body);
+		background-color: transparent;
+		color: var(--primary);
+		border: 1px solid var(--primary);
+		padding: 6px 12px;
+		text-transform: uppercase;
+		letter-spacing: 1px;
+		font-weight: 700;
+		cursor: pointer;
+		margin-right: 15px;
+		transition:
+			background-color 0.2s,
+			color 0.2s;
+	}
+
+	&::file-selector-button:hover {
+		background-color: var(--primary);
+		color: var(--background);
+	}
+}
+
+/* Data Lists replacing Tables */
+.data-list {
+	display: flex;
+	flex-direction: column;
+	gap: 15px;
+}
+.data-item {
+	border: 1px solid var(--border);
+	padding: 15px;
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+	gap: 10px;
+}
+.data-col {
+	display: flex;
+	flex-direction: column;
+}
+.data-col label {
+	font-size: 0.75rem;
+	color: var(--secondary);
+	margin-bottom: 2px;
+}
+.data-actions {
+	display: flex;
+	gap: 10px;
+}
+
+/* Data Table (Alternative to list) */
+.data-table {
+	display: flex;
+	flex-direction: column;
+}
+.table-header {
+	display: flex;
+	padding: 10px 15px;
+	font-size: 0.8em;
+	color: var(--secondary);
+	border-bottom: 1px solid var(--border);
+	text-transform: uppercase;
+}
+.table-row {
+	display: flex;
+	padding: 15px;
+	align-items: center;
+	border-bottom: 1px solid var(--border);
+}
+.table-row:last-child {
+	border-bottom: none;
+}
+
+/* Badges */
+.badge {
+	display: inline-block;
+	padding: 4px 8px;
+	font-size: 0.75rem;
+	font-weight: 700;
+	text-transform: uppercase;
+	border: 1px solid var(--secondary);
+	color: var(--secondary);
+}
+.badge-success {
+	border-color: var(--primary);
+	color: var(--primary);
+}
+.badge-error {
+	border-color: var(--error);
+	color: var(--error);
+}
+
+@media (max-width: 768px) {
+	.data-item {
+		flex-direction: column;
+		align-items: flex-start;
+	}
+	.data-table {
+		overflow-x: auto;
+	}
+	.table-header,
+	.table-row {
+		min-width: 800px; /* Force minimum width to enable scrolling */
+	}
+}
+
+/* Global header and actions styles */
+.user-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+.actions .btn {
+	margin-left: 10px;
+}
+.actions .btn.active {
+	background-color: var(--primary);
+	color: var(--background);
+}
+@media (max-width: 846px) {
+	.user-header {
+		flex-direction: column;
+		align-items: center;
+		gap: 15px;
+	}
+	.actions {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 10px;
+	}
+	.actions .btn {
+		margin-left: 0;
+	}
+}
+
+.btn.error-btn {
+	border-color: var(--error) !important;
+	color: var(--error) !important;
+}
+
+.btn.error-btn:hover {
+	background-color: var(--error) !important;
+	color: var(--background) !important;
+}
+
+/* Custom Checkbox Styling */
+input[type="checkbox"] {
+	appearance: none;
+	-webkit-appearance: none;
+	width: 20px;
+	height: 20px;
+	border: 1px solid var(--border);
+	background-color: transparent;
+	display: inline-block;
+	vertical-align: middle;
+	cursor: pointer;
+	position: relative;
+	border-radius: 0 !important;
+	outline: none;
+	transition: border-color 0.2s, background-color 0.2s;
+}
+
+input[type="checkbox"]:hover {
+	border-color: var(--primary);
+}
+
+input[type="checkbox"]:checked {
+	border-color: var(--border);
+	background-color: var(--primary);
+	box-shadow: inset 0 0 0 4px var(--background);
+}
+
+/* Code Block & Syntax Highlighting */
+.markdown-body pre {
+	position: relative;
+	background-color: var(--background);
+	border: 1px solid var(--border);
+	padding: 30px 15px 15px 15px;
+	margin-top: 15px;
+	margin-bottom: 20px;
+	overflow-x: auto;
+	white-space: pre-wrap !important;
+	word-wrap: break-word !important;
+}
+
+.markdown-body pre code {
+	display: block;
+	font-family: var(--font-body);
+	font-size: 0.9em;
+	color: var(--text);
+	white-space: pre-wrap !important;
+	word-wrap: break-word !important;
+	background-color: transparent;
+	padding: 0;
+}
+
+.markdown-body code {
+	font-family: var(--font-body);
+	background-color: rgba(255, 255, 255, 0.08);
+	padding: 2px 4px;
+	color: var(--primary);
+}
+
+/* highlight.js theme using SCSS vars */
+.hljs-keyword, .hljs-selector-tag, .hljs-built_in, .hljs-name, .hljs-tag {
+	color: var(--primary);
+	font-weight: bold;
+}
+.hljs-string, .hljs-title, .hljs-section, .hljs-attribute, .hljs-literal, .hljs-template-tag, .hljs-template-variable, .hljs-type, .hljs-addition {
+	color: var(--accent);
+}
+.hljs-comment, .hljs-quote, .hljs-deletion, .hljs-meta {
+	color: var(--secondary);
+	font-style: italic;
+}
+.hljs-number, .hljs-regexp, .hljs-symbol, .hljs-bullet, .hljs-link {
+	color: var(--warning);
+}
+.hljs-variable, .hljs-template-variable {
+	color: var(--error);
+}
+
+.code-lang {
+	position: absolute;
+	top: 8px;
+	left: 10px;
+	font-family: var(--font-heading);
+	font-size: 0.75em;
+	color: var(--secondary);
+	text-transform: uppercase;
+	letter-spacing: 1px;
+}
+
+/* Copy button */
+.copy-code-btn {
+	position: absolute;
+	top: 5px;
+	right: 5px;
+	font-family: var(--font-body);
+	font-size: 0.7em;
+	padding: 4px 8px;
+	background-color: transparent;
+	border: 1px solid var(--border);
+	color: var(--secondary);
+	cursor: pointer;
+	text-transform: uppercase;
+	font-weight: 700;
+	transition: all 0.2s;
+}
+.copy-code-btn:hover {
+	color: var(--primary);
+	border-color: var(--primary);
+}

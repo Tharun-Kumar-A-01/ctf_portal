@@ -1,0 +1,35 @@
+services:
+  db:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-ctf_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-ctf_password}
+      POSTGRES_DB: ${POSTGRES_DB:-ctf_db}
+    volumes:
+      - ctf-db-data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  cache:
+    image: valkey/valkey:7.2-alpine
+    restart: unless-stopped
+
+  app:
+    build:
+      context: .
+      dockerfile: Containerfile
+    ports:
+      - "80:8080"
+      - "443:8443"
+    environment:
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-ctf_user}:${POSTGRES_PASSWORD:-ctf_password}@db:5432/${POSTGRES_DB:-ctf_db}
+      - CACHE_URL=redis://cache:6379/0
+      - FLASK_ENV=production
+    env_file:
+      - .env
+    depends_on:
+      - db
+      - cache
+    restart: unless-stopped
+
+volumes:
+  ctf-db-data:
